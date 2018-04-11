@@ -12,7 +12,9 @@ package com.example.android.justjava;
 
          import android.os.Bundle;
          import android.support.v7.app.AppCompatActivity;
+         import android.util.Log;
          import android.view.View;
+         import android.widget.CheckBox;
          import android.widget.TextView;
 
          import java.text.NumberFormat;
@@ -24,6 +26,7 @@ package com.example.android.justjava;
  */
 public class MainActivity extends AppCompatActivity {
     int quantity = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
+        CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
+        boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
+        Log.v("MainActivity", "add whipped cream? " + hasWhippedCream);
         int price = calculatePrice();
         String priceMessage = createOrderSummary(price);
         displayMessage(priceMessage);
@@ -79,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Calculates the price of the order.
      *
-     * @param quantity is the number of cups of coffee ordered
-     * @param pricePerCup is cost of each cup
+     *
      */
     private int calculatePrice() {
         int pricePerCup = 5;
         int price = quantity * pricePerCup;
         return price;
     }
+
 }
