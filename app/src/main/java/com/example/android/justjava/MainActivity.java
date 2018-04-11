@@ -12,9 +12,11 @@ package com.example.android.justjava;
 
          import android.os.Bundle;
          import android.support.v7.app.AppCompatActivity;
+         import android.text.Editable;
          import android.util.Log;
          import android.view.View;
          import android.widget.CheckBox;
+         import android.widget.EditText;
          import android.widget.TextView;
 
          import java.text.NumberFormat;
@@ -38,10 +40,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
         CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
+        CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
+        EditText nameField = (EditText) getText(R.id.name_field);
+        String username = nameField.getText().toString();
+        Log.v("Main Activity", "Name" + username);
         boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
-        Log.v("MainActivity", "add whipped cream? " + hasWhippedCream);
+        boolean hasChocolate = chocolateCheckBox.isChecked();
         int price = calculatePrice();
-        String priceMessage = createOrderSummary(price);
+        String priceMessage = createOrderSummary(username, price, hasWhippedCream, hasChocolate);
         displayMessage(priceMessage);
     }
     /**
@@ -59,11 +65,18 @@ public class MainActivity extends AppCompatActivity {
         displayQuantity(quantity);
     }
     /**
-     * This method displays the order summary on the screen.
+     * Create summary of the order.
+     *
+     * @param hasWhippedCream is whether or not the user wants whipped cream topping
+     * @param hasChocolate is whether or not the user wants chocolate topping
+     * @param price of the order
+     * @return text summary
      */
-    private String createOrderSummary(int price){
-        String priceMessage = "Name: Kaptain Kunal" + "\n" + "Quanity: ";
-        priceMessage = priceMessage + quantity + "\n" + "$" + price;
+    private String createOrderSummary(String username, int price, boolean hasWhippedCream, boolean hasChocolate){
+        String priceMessage = "Name: " + username;
+        priceMessage = priceMessage + "\nAdd whipped cream? " + hasWhippedCream;
+        priceMessage = priceMessage + "\nAdd chocolate? " + hasChocolate;
+        priceMessage = priceMessage + "\nQuantity: " + quantity + "\n" + "$" + price;
         priceMessage = priceMessage + "\nThank you!";
         return priceMessage;
     }
