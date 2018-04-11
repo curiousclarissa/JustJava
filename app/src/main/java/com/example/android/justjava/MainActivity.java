@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
         int price = calculatePrice();
-        createOrderSummary(price);
+        String priceMessage = createOrderSummary(price);
         displayMessage(priceMessage);
     }
     /**
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
      * This method displays the order summary on the screen.
      */
     private String createOrderSummary(int price){
-        String priceMessage = "Name: Kaptain Kunal + '\n' Quanity: ";
-        priceMessage = priceMessage + quantity + "\n" + price;
+        String priceMessage = "Name: Kaptain Kunal" + "\n" + "Quanity: ";
+        priceMessage = priceMessage + quantity + "\n" + "$" + price;
         priceMessage = priceMessage + "\nThank you!";
         return priceMessage;
     }
