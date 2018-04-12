@@ -10,6 +10,8 @@ package com.example.android.justjava;
 
 
 
+         import android.content.Intent;
+         import android.net.Uri;
          import android.os.Bundle;
          import android.support.v7.app.AppCompatActivity;
          import android.text.Editable;
@@ -18,6 +20,7 @@ package com.example.android.justjava;
          import android.widget.CheckBox;
          import android.widget.EditText;
          import android.widget.TextView;
+         import android.widget.Toast;
 
          import java.text.NumberFormat;
 
@@ -39,30 +42,44 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
+        EditText nameField = (EditText) findViewById(R.id.name_field);
+        String name = nameField.getText().toString();
         CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
         CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
-        EditText nameField = (EditText) getText(R.id.name_field);
-        String name = nameField.getText().toString();
-        Log.v("Main Activity", "Name" + name);
         boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
         boolean hasChocolate = chocolateCheckBox.isChecked();
-        int price = calculatePrice();
-        String priceMessage = createOrderSummary(price, hasWhippedCream, hasChocolate);
-        displayMessage(priceMessage);
+        int price = calculatePrice(hasWhippedCream, hasChocolate);
+        String priceMessage = createOrderSummary(name, price, hasWhippedCream, hasChocolate);
+        Intent emailOrder = new Intent(Intent.ACTION_SENDTO);
+        emailOrder.setData(Uri.parse("mailto:")); // only email apps should handle this
+        emailOrder.putExtra(Intent.EXTRA_SUBJECT, "JustJava Order for " + name);
+        emailOrder.putExtra(Intent.EXTRA_TEXT, priceMessage);
+        if (emailOrder.resolveActivity(getPackageManager()) != null) {
+            startActivity(emailOrder);
+        }
     }
     /**
      * This method is called when the plus button is clicked.
      */
     public void increment(View view) {
-        quantity = quantity + 1;
-        displayQuantity(quantity);
+        if (quantity == 100){
+            Toast.makeText(this, "You can't buy more than 100 coffees.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+            quantity = quantity + 1;
+            displayQuantity(quantity);
     }
     /**
      * This method is called when the minus button is clicked.
      */
     public void decrement(View view) {
-        quantity = quantity - 1;
-        displayQuantity(quantity);
+        if(quantity == 1) {
+            Toast.makeText(this, "You can't buy no coffees", Toast.LENGTH_SHORT).show();
+            return;
+        }
+            quantity = quantity - 1;
+            displayQuantity(quantity);
+
     }
     /**
      * Create summary of the order.
@@ -72,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
      * @param price of the order
      * @return text summary
      */
-    private String createOrderSummary(int price, boolean hasWhippedCream, boolean hasChocolate){
-        String priceMessage = "Name: ";
+    private String createOrderSummary(String name, int price, boolean hasWhippedCream, boolean hasChocolate){
+        String priceMessage = "Name: " + name;
         priceMessage = priceMessage + "\nAdd whipped cream? " + hasWhippedCream;
         priceMessage = priceMessage + "\nAdd chocolate? " + hasChocolate;
         priceMessage = priceMessage + "\nQuantity: " + quantity + "\n" + "$" + price;
@@ -91,18 +108,24 @@ public class MainActivity extends AppCompatActivity {
      * This method displays the given order summary on the screen.
      */
 
-    private void displayMessage(String message) {
-        TextView orderSummaryTextView = findViewById(R.id.order_summary_text_view);
-        orderSummaryTextView.setText(message);
-    }
+
     /**
      * Calculates the price of the order.
      *
      *
      */
-    private int calculatePrice() {
+    private int calculatePrice(boolean hasWhippedCream, boolean hasChocolate) {
         int pricePerCup = 5;
-        int price = quantity * pricePerCup;
+        int priceWhippedCream = 1;
+        int priceChocolate = 2;
+        int basePrice = 5;
+        if (hasWhippedCream){
+            basePrice = basePrice + priceWhippedCream;
+        }
+        if (hasChocolate){
+            basePrice = basePrice + priceChocolate;
+        }
+        int price = quantity * basePrice;
         return price;
     }
 

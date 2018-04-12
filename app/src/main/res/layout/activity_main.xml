@@ -95,20 +95,6 @@
             android:layout_marginLeft="16dp"
             android:text="Price"
             android:textAllCaps="true" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="Order Summary"
-            android:textAllCaps="true" />
-        <TextView
-            android:id="@+id/order_summary_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginTop="16dp"
-            android:text="$00"
-            android:textSize="16sp" />
 
         <Button
             android:id="@+id/button_id"
